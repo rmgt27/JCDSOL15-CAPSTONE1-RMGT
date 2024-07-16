@@ -1,7 +1,7 @@
 # JCDSOL15-CAPSTONE1-RMGT
 Yellow Pages - Contact Management Application
 Overview
-This Python application, named Yellow Pages, serves as a digital phone book where users can manage contacts through various operations such as adding, updating, deleting, searching, sorting, and viewing detailed information about contacts. The application ensures each contact has a unique identifier and validates inputs for names and phone numbers according to specified criteria.
+Aplikasi ini adalah sebuah sistem manajemen kontak sederhana yang dirancang menggunakan bahasa pemrograman Python. Tujuan utamanya adalah untuk memudahkan pengguna dalam melakukan operasi dasar CRUD (Create, Read, Update, Delete) terhadap daftar kontak yang disimpan dalam memori komputer. Aplikasi ini menggunakan antarmuka berbasis konsol yang berisi menu-menu interaktif untuk menambah, melihat, mengubah, menghapus, mencari, dan mengurutkan kontak.
 
 Code Explanation
 
