@@ -17,18 +17,16 @@ Imports and Initialization
 
 Main Menu Function:
 
-def main_menu():
-
-    print("\nYellow Pages - Main Menu")
-    print("1. Read Menu")
-    print("2. Create Menu")
-    print("3. Update Menu")
-    print("4. Delete Menu")
-    print("5. Search Menu")
-    print("6. Sort Menu")
-    print("7. Detail Menu")
-    print("8. Exit")
-
+	def main_menu():
+		print("\nYellow Pages - Main Menu")
+ 		print("1. Read Menu")
+   		print("2. Create Menu")
+     		print("3. Update Menu")
+       		print("4. Delete Menu")
+	 	print("5. Search Menu")
+   		print("6. Sort Menu")
+     		print("7. Detail Menu")
+       		print("8. Exit")
 - Fungsi ini menampilkan opsi menu utama kepada pengguna.  
 - Displays the main menu options for interacting with contacts.
 
@@ -42,84 +40,78 @@ def read_menu():
         print("{:<20} {:<20} {:<15}".format("ID", "Name", "Phone"))
         for contact in contacts:
             print("{:<20} {:<20} {:<15}".format(contact['id'], contact['name'], format_phone(contact['phone'])))
-
 - Fungsi ini menampilkan semua kontak jika ada, atau pesan jika daftar kontak kosong.
 - Lists all contacts if any exist, displaying their ID, name, and formatted phone number.
 
 Validation and Formatting Functions:
 
-	def is_valid_name(name):
- 	   return bool(re.match(r'^[A-Za-z\s]+$', name))
+def is_valid_name(name):
 
-	def is_valid_phone(phone):
-    		phone = phone.lstrip('0')
-    		return bool(re.match(r'^\+?62\d{9,11}$', phone))
-
-	def format_phone(phone):
-   		phone = phone.lstrip('0')
-   		if not phone.startswith('+62'):
-    		    phone = '+62' + phone
-    		return phone
-
+    return bool(re.match(r'^[A-Za-z\s]+$', name))
+def is_valid_phone(phone):
+    phone = phone.lstrip('0')
+    return bool(re.match(r'^\+?62\d{9,11}$', phone))
+def format_phone(phone):
+    phone = phone.lstrip('0')
+    if not phone.startswith('+62'):
+        phone = '+62' + phone
+    return phone
 - is_valid_name(name): Validates that the name consists only of alphabetic characters and spaces.
 - is_valid_phone(phone): Validates the phone number format, ensuring it starts with optional +62 and has 9 to 11 digits.
 - format_phone(phone): Formats the phone number by removing leading zeroes and ensuring it starts with +62.
-- 
 
 Function Check for Unique Contacts:
 
-	def is_unique_contact(name, phone):
-    		for contact in contacts:
-        		if contact['name'].lower() == name.lower() and contact['phone'] == phone:
-            		return False
-    		return True
+def is_unique_contact(name, phone):
+    for contact in contacts:
+        if contact['name'].lower() == name.lower() and contact['phone'] == phone:
+            return False
+    return True
 - Fungsi ini memeriksa apakah kontak dengan nama dan nomor telepon yang sama sudah ada.
 - Checks if a contact with the same name and phone number already exists in the contacts list.
 
 Create Menu Function:
+def create_menu():
+    while True:
+        name = input("Enter name: ")
+        if not is_valid_name(name):
+            print("Invalid name. Please enter only alphabetic characters and spaces.")
+            continue
+        break
 
-	def create_menu():
-    		while True:
-        		name = input("Enter name: ")
-       			if not is_valid_name(name):
-           			print("Invalid name. Please enter only alphabetic characters and spaces.")
-           			continue
-        		break
+    while True:
+        phone = input("Enter phone number (9-11 digits): ")
+        if not is_valid_phone(phone):
+            print("Invalid phone number format. Please enter 9 to 11 digits.")
+            continue
+        break
 
-   	 	while True:
-        		phone = input("Enter phone number (9-11 digits): ")
-        		if not is_valid_phone(phone):
-            			print("Invalid phone number format. Please enter 9 to 11 digits.")
-            			continue
-    		   	break
-
-    		if is_unique_contact(name, phone):
-     			contact_id = str(uuid.uuid4())[:8]
-        		contacts.append({'id': contact_id, 'name': name, 'phone': format_phone(phone)})
-        		print("Contact added successfully.")
-    		else:
-    		    print("Contact with this name and phone number already exists.")
+    if is_unique_contact(name, phone):
+        contact_id = str(uuid.uuid4())[:8]
+        contacts.append({'id': contact_id, 'name': name, 'phone': format_phone(phone)})
+        print("Contact added successfully.")
+    else:
+        print("Contact with this name and phone number already exists.")
 - Fungsi ini memungkinkan pengguna menambahkan kontak baru setelah memvalidasi nama dan nomor telepon.
 
 Update Menu Function:
+def update_menu():
+    read_menu()
+    try:
+        contact_id = input("Enter the ID of the contact to update: ")
+        contact = next((c for c in contacts if c['id'] == contact_id), None)
+        if contact:
+            while True:
+                name = input("Enter new name: ")
+                if not is_valid_name(name):
+                    print("Invalid name. Please enter only alphabetic characters and spaces.")
+                    continue
+                break
 
-	def update_menu():
-   		read_menu()
-    		try:
-        	contact_id = input("Enter the ID of the contact to update: ")
-        	contact = next((c for c in contacts if c['id'] == contact_id), None)
-        	if contact:
-            		while True:
-                		name = input("Enter new name: ")
-                		if not is_valid_name(name):
-                    			print("Invalid name. Please enter only alphabetic characters and spaces.")
-                    			continue
-                		break
-
-            	while True:
-                	phone = input("Enter new phone number (9-11 digits): ")
-                	if not is_valid_phone(phone):
-                    		print("Invalid phone number format. Please enter 9 to 11 digits.")
+            while True:
+                phone = input("Enter new phone number (9-11 digits): ")
+                if not is_valid_phone(phone):
+                    print("Invalid phone number format. Please enter 9 to 11 digits.")
                     continue
                 break
 
