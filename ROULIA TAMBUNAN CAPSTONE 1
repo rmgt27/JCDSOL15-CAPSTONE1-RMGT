@@ -72,9 +72,10 @@ def create_menu():
             continue
         break
     
-    if is_unique_contact(name, phone):
+    formatted_phone = format_phone(phone)
+    if is_unique_contact(name, formatted_phone):
         contact_id = str(uuid.uuid4())[:8]  # Generate a unique ID
-        contacts.append({'id': contact_id, 'name': name, 'phone': phone})
+        contacts.append({'id': contact_id, 'name': name, 'phone': formatted_phone})
         print("Contact added successfully.")
     else:
         print("Contact with this name and phone number already exists.")
@@ -101,9 +102,10 @@ def update_menu():
                     continue
                 break
 
-            if is_unique_contact(name, phone) or (contact['name'].lower() == name.lower() and contact['phone'] == phone):
+            formatted_phone = format_phone(phone)
+            if is_unique_contact(name, formatted_phone) or (contact['name'].lower() == name.lower() and contact['phone'] == formatted_phone):
                 contact['name'] = name
-                contact['phone'] = phone
+                contact['phone'] = formatted_phone
                 print("Contact updated successfully.")
             else:
                 print("Contact with this name and phone number already exists.")
