@@ -1,0 +1,206 @@
+import re
+import uuid
+
+# Inisialisasi data kontak dalam bentuk list kosong
+contacts = []
+
+# Fungsi untuk menampilkan menu utama
+def main_menu():
+    print("\nYellow Pages - Main Menu")
+    print("1. Read Menu")
+    print("2. Create Menu")
+    print("3. Update Menu")
+    print("4. Delete Menu")
+    print("5. Search Menu")
+    print("6. Sort Menu")
+    print("7. Detail Menu")
+    print("8. Exit")
+
+# Fungsi untuk membaca data kontak
+def read_menu():
+    if not contacts:
+        print("No contacts found.")
+    else:
+        print("{:<20} {:<20} {:<15}".format("ID", "Name", "Phone"))
+        for contact in contacts:
+            print("{:<20} {:<20} {:<15}".format(contact['id'], contact['name'], format_phone(contact['phone'])))
+
+# Fungsi validasi nama
+def is_valid_name(name):
+    return bool(re.match(r'^[A-Za-z\s]+$', name))
+
+# Fungsi validasi nomor telepon
+def is_valid_phone(phone):
+    phone = phone.lstrip("0").lstrip("+62")
+    return bool(re.match(r'^\d{10,12}$', phone))
+
+# Fungsi untuk memformat nomor telepon
+def format_phone(phone):
+    if phone.startswith("0"):
+        phone = "+62" + phone[1:]
+    elif phone.startswith("62"):
+        phone = "+" + phone
+
+    if len(phone) == 13:
+        return f"{phone[:4]}-{phone[4:8]}-{phone[8:]}"
+    elif len(phone) == 14:
+        return f"{phone[:4]}-{phone[4:9]}-{phone[9:]}"
+    elif len(phone) == 15:
+        return f"{phone[:4]}-{phone[4:10]}-{phone[10:]}"
+    return phone
+
+# Fungsi untuk memeriksa apakah kontak unik
+def is_unique_contact(name, phone):
+    for contact in contacts:
+        if contact['name'].lower() == name.lower() and contact['phone'] == phone:
+            return False
+    return True
+
+# Fungsi untuk menambahkan kontak baru
+def create_menu():
+    while True:
+        name = input("Enter name: ")
+        if not is_valid_name(name):
+            print("Invalid name. Please enter only alphabetic characters and spaces.")
+            continue
+        break
+    
+    while True:
+        phone = input("Enter phone number (10-12 digits): ")
+        if not is_valid_phone(phone):
+            print("Invalid phone number format. Please enter 10 to 12 digits.")
+            continue
+        break
+    
+    if is_unique_contact(name, phone):
+        contact_id = str(uuid.uuid4())[:8]  # Generate a unique ID
+        contacts.append({'id': contact_id, 'name': name, 'phone': phone})
+        print("Contact added successfully.")
+    else:
+        print("Contact with this name and phone number already exists.")
+
+# Fungsi untuk memperbarui kontak
+def update_menu():
+    read_menu()
+    try:
+        contact_id = input("Enter the ID of the contact to update: ")
+        contact = next((c for c in contacts if c['id'] == contact_id), None)
+        
+        if contact:
+            while True:
+                name = input("Enter new name: ")
+                if not is_valid_name(name):
+                    print("Invalid name. Please enter only alphabetic characters and spaces.")
+                    continue
+                break
+
+            while True:
+                phone = input("Enter new phone number (10-12 digits): ")
+                if not is_valid_phone(phone):
+                    print("Invalid phone number format. Please enter 10 to 12 digits.")
+                    continue
+                break
+
+            if is_unique_contact(name, phone) or (contact['name'].lower() == name.lower() and contact['phone'] == phone):
+                contact['name'] = name
+                contact['phone'] = phone
+                print("Contact updated successfully.")
+            else:
+                print("Contact with this name and phone number already exists.")
+        else:
+            print("Invalid contact ID.")
+    except ValueError:
+        print("Invalid input. Please enter a number.")
+
+# Fungsi untuk menghapus kontak
+def delete_menu():
+    read_menu()
+    try:
+        contact_id = input("Enter the ID of the contact to delete: ")
+        contact = next((c for c in contacts if c['id'] == contact_id), None)
+        
+        if contact:
+            contacts.remove(contact)
+            print("Contact deleted successfully.")
+        else:
+            print("Invalid contact ID.")
+    except ValueError:
+        print("Invalid input. Please enter a valid ID.")
+
+# Fungsi untuk mencari kontak
+def search_menu():
+    search_term = input("Enter name or phone number to search: ")
+    results = [contact for contact in contacts if search_term.lower() in contact['name'].lower() or search_term in contact['phone']]
+    
+    if results:
+        print("{:<20} {:<20} {:<15}".format("ID", "Name", "Phone"))
+        for contact in results:
+            print("{:<20} {:<20} {:<15}".format(contact['id'], contact['name'], format_phone(contact['phone'])))
+    else:
+        print("No contacts found.")
+
+# Fungsi untuk mengurutkan kontak
+def sort_menu():
+    print("\nSort Contacts")
+    print("1. By Name")
+    print("2. By Phone Number")
+    choice = input("Select an option: ")
+
+    if choice == '1':
+        sorted_contacts = sorted(contacts, key=lambda x: x['name'])
+        print("\nContacts sorted by name:")
+    elif choice == '2':
+        sorted_contacts = sorted(contacts, key=lambda x: x['phone'])
+        print("\nContacts sorted by phone number:")
+    else:
+        print("Invalid option. Returning to main menu.")
+        return
+    
+    print("{:<20} {:<20} {:<15}".format("ID", "Name", "Phone"))
+    for contact in sorted_contacts:
+        print("{:<20} {:<20} {:<15}".format(contact['id'], contact['name'], format_phone(contact['phone'])))
+
+# Fungsi untuk menampilkan detail kontak
+def detail_menu():
+    read_menu()
+    try:
+        contact_id = input("Enter the ID of the contact to view details: ")
+        contact = next((c for c in contacts if c['id'] == contact_id), None)
+        
+        if contact:
+            print(f"\nID: {contact['id']}")
+            print(f"Name: {contact['name']}")
+            print(f"Phone: {format_phone(contact['phone'])}")
+        else:
+            print("Invalid contact ID.")
+    except ValueError:
+        print("Invalid input. Please enter a valid ID.")
+
+# Fungsi utama untuk menjalankan aplikasi
+def main():
+    while True:
+        main_menu()
+        choice = input("Select an option: ")
+
+        if choice == '1':
+            read_menu()
+        elif choice == '2':
+            create_menu()
+        elif choice == '3':
+            update_menu()
+        elif choice == '4':
+            delete_menu()
+        elif choice == '5':
+            search_menu()
+        elif choice == '6':
+            sort_menu()
+        elif choice == '7':
+            detail_menu()
+        elif choice == '8':
+            print("Exiting Yellow Pages. Goodbye!")
+            break
+        else:
+            print("Invalid option. Please select a number between 1 and 8.")
+
+if __name__ == "__main__":
+    main()
