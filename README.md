@@ -16,7 +16,9 @@ Imports and Initialization
 - "contacts": A list to store contact dictionaries.
 
 Main Menu Function:
+
 def main_menu():
+
     print("\nYellow Pages - Main Menu")
     print("1. Read Menu")
     print("2. Create Menu")
@@ -31,30 +33,33 @@ def main_menu():
 - Displays the main menu options for interacting with contacts.
 
 Read Menu Function:
-	
-	def read_menu():
-    	if not contacts:
-        	print("No contacts found.")
-    	else:
-        	print("{:<10} {:<20} {:<15}".format("ID", "Name", "Phone"))
-        	for contact in contacts:
-            	print("{:<10} {:<20} {:<15}".format(contact['id'], contact['name'], format_phone(contact['phone'])))
+
+def read_menu():
+
+    if not contacts:
+        print("No contacts found.")
+    else:
+        print("{:<20} {:<20} {:<15}".format("ID", "Name", "Phone"))
+        for contact in contacts:
+            print("{:<20} {:<20} {:<15}".format(contact['id'], contact['name'], format_phone(contact['phone'])))
+
 - Fungsi ini menampilkan semua kontak jika ada, atau pesan jika daftar kontak kosong.
 - Lists all contacts if any exist, displaying their ID, name, and formatted phone number.
 
 Validation and Formatting Functions:
-def is_valid_name(name):
-    return bool(re.match(r'^[A-Za-z\s]+$', name))
 
-def is_valid_phone(phone):
-    phone = phone.lstrip('0')
-    return bool(re.match(r'^\+?62\d{9,11}$', phone))
+	def is_valid_name(name):
+ 	   return bool(re.match(r'^[A-Za-z\s]+$', name))
 
-def format_phone(phone):
-    phone = phone.lstrip('0')
-    if not phone.startswith('+62'):
-        phone = '+62' + phone
-    return phone
+	def is_valid_phone(phone):
+    		phone = phone.lstrip('0')
+    		return bool(re.match(r'^\+?62\d{9,11}$', phone))
+
+	def format_phone(phone):
+   		phone = phone.lstrip('0')
+   		if not phone.startswith('+62'):
+    		    phone = '+62' + phone
+    		return phone
 
 - is_valid_name(name): Validates that the name consists only of alphabetic characters and spaces.
 - is_valid_phone(phone): Validates the phone number format, ensuring it starts with optional +62 and has 9 to 11 digits.
@@ -64,55 +69,57 @@ def format_phone(phone):
 Function Check for Unique Contacts:
 
 	def is_unique_contact(name, phone):
-    	for contact in contacts:
-        	if contact['name'].lower() == name.lower() and contact['phone'] == phone:
-            	return False
-    	return True
+    		for contact in contacts:
+        		if contact['name'].lower() == name.lower() and contact['phone'] == phone:
+            		return False
+    		return True
 - Fungsi ini memeriksa apakah kontak dengan nama dan nomor telepon yang sama sudah ada.
 - Checks if a contact with the same name and phone number already exists in the contacts list.
 
 Create Menu Function:
-def create_menu():
-    while True:
-        name = input("Enter name: ")
-        if not is_valid_name(name):
-            print("Invalid name. Please enter only alphabetic characters and spaces.")
-            continue
-        break
 
-    while True:
-        phone = input("Enter phone number (9-11 digits): ")
-        if not is_valid_phone(phone):
-            print("Invalid phone number format. Please enter 9 to 11 digits.")
-            continue
-        break
+	def create_menu():
+    		while True:
+        		name = input("Enter name: ")
+       			if not is_valid_name(name):
+           			print("Invalid name. Please enter only alphabetic characters and spaces.")
+           			continue
+        		break
 
-    if is_unique_contact(name, phone):
-        contact_id = str(uuid.uuid4())[:8]
-        contacts.append({'id': contact_id, 'name': name, 'phone': format_phone(phone)})
-        print("Contact added successfully.")
-    else:
-        print("Contact with this name and phone number already exists.")
+   	 	while True:
+        		phone = input("Enter phone number (9-11 digits): ")
+        		if not is_valid_phone(phone):
+            			print("Invalid phone number format. Please enter 9 to 11 digits.")
+            			continue
+    		   	break
+
+    		if is_unique_contact(name, phone):
+     			contact_id = str(uuid.uuid4())[:8]
+        		contacts.append({'id': contact_id, 'name': name, 'phone': format_phone(phone)})
+        		print("Contact added successfully.")
+    		else:
+    		    print("Contact with this name and phone number already exists.")
 - Fungsi ini memungkinkan pengguna menambahkan kontak baru setelah memvalidasi nama dan nomor telepon.
 
 Update Menu Function:
-def update_menu():
-    read_menu()
-    try:
-        contact_id = input("Enter the ID of the contact to update: ")
-        contact = next((c for c in contacts if c['id'] == contact_id), None)
-        if contact:
-            while True:
-                name = input("Enter new name: ")
-                if not is_valid_name(name):
-                    print("Invalid name. Please enter only alphabetic characters and spaces.")
-                    continue
-                break
 
-            while True:
-                phone = input("Enter new phone number (9-11 digits): ")
-                if not is_valid_phone(phone):
-                    print("Invalid phone number format. Please enter 9 to 11 digits.")
+	def update_menu():
+   		read_menu()
+    		try:
+        	contact_id = input("Enter the ID of the contact to update: ")
+        	contact = next((c for c in contacts if c['id'] == contact_id), None)
+        	if contact:
+            		while True:
+                		name = input("Enter new name: ")
+                		if not is_valid_name(name):
+                    			print("Invalid name. Please enter only alphabetic characters and spaces.")
+                    			continue
+                		break
+
+            	while True:
+                	phone = input("Enter new phone number (9-11 digits): ")
+                	if not is_valid_phone(phone):
+                    		print("Invalid phone number format. Please enter 9 to 11 digits.")
                     continue
                 break
 
